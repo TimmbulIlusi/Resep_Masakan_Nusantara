@@ -10,6 +10,32 @@ st.title("Daftar Resep Nusantara")
 
 
 # =========================
+# LOAD DATA
+# =========================
+
+df = load_data()
+
+
+# =========================
+# SEARCH
+# =========================
+
+search = st.text_input(
+    "Cari Resep"
+)
+
+
+if search:
+
+    df = df[
+        df["cleaned_title"].str.contains(
+            search.lower(),
+            na=False
+        )
+    ]
+
+
+# =========================
 # STYLE
 # =========================
 
@@ -23,8 +49,8 @@ st.markdown(
 
     .recipe-card{
         background-color:#fffaf3;
-        padding:20px;
-        border-radius:16px;
+        padding:22px;
+        border-radius:18px;
         border:1px solid #dbc4aa;
         margin-bottom:20px;
     }
@@ -36,13 +62,23 @@ st.markdown(
         margin-bottom:12px;
     }
 
-    .recipe-preview{
+    .preview-box{
         background-color:#ede0d4;
         padding:12px;
         border-radius:12px;
         color:#4b3a2f;
-        line-height:1.7;
+        line-height:1.8;
         margin-top:10px;
+    }
+
+    .info-badge{
+        background-color:#a47148;
+        color:white;
+        padding:6px 14px;
+        border-radius:999px;
+        font-size:13px;
+        display:inline-block;
+        margin-bottom:14px;
     }
 
     </style>
@@ -52,50 +88,65 @@ st.markdown(
 
 
 # =========================
-# LOAD DATA
-# =========================
-
-df = load_data()
-
-
-# =========================
-# SEARCH
-# =========================
-
-search = st.text_input(
-    "Cari Nama Resep"
-)
-
-
-if search:
-
-    filtered_df = df[
-        df["Title"].astype(str).str.contains(
-            search,
-            case=False,
-            na=False
-        )
-    ]
-
-else:
-
-    filtered_df = df
-
-
-# =========================
 # INFO
 # =========================
 
 st.info(
-    f"Total resep ditemukan: {len(filtered_df)}"
+    f"Total resep ditemukan: {len(df)}"
 )
 
 
 # =========================
-# TAMPILKAN RESEP
+# PAGINATION
 # =========================
 
-for index, row in filtered_df.head(50).iterrows():
+items_per_page = 20
+
+total_data = len(df)
+
+total_pages = total_data // items_per_page
+
+if total_data % items_per_page != 0:
+
+    total_pages += 1
+
+
+page = st.number_input(
+
+    "Halaman",
+
+    min_value=1,
+
+    max_value=max(total_pages, 1),
+
+    value=1,
+
+    step=1
+
+)
+
+
+start_idx = (
+    (page - 1)
+    * items_per_page
+)
+
+end_idx = (
+    start_idx
+    + items_per_page
+)
+
+
+page_data = df.iloc[
+    start_idx:end_idx
+]
+
+
+# =========================
+# TAMPILKAN DATA
+# =========================
+
+for index, row in page_data.iterrows():
 
     title = str(
         row["Title"]
@@ -124,11 +175,15 @@ for index, row in filtered_df.head(50).iterrows():
         f"""
         <div class="recipe-card">
 
+        <div class="info-badge">
+            Resep Nusantara
+        </div>
+
         <div class="recipe-title">
             {title}
         </div>
 
-        <div class="recipe-preview">
+        <div class="preview-box">
 
         <b>Preview Bahan:</b>
 
@@ -148,7 +203,9 @@ for index, row in filtered_df.head(50).iterrows():
         "Lihat Detail Resep"
     ):
 
-        st.subheader("Bahan Lengkap")
+        st.subheader(
+            "Bahan Lengkap"
+        )
 
         for ing in ingredients:
 
@@ -161,7 +218,9 @@ for index, row in filtered_df.head(50).iterrows():
                 )
 
 
-        st.subheader("Langkah Memasak")
+        st.subheader(
+            "Langkah Memasak"
+        )
 
         steps = str(
             row["Steps"]
@@ -189,3 +248,22 @@ for index, row in filtered_df.head(50).iterrows():
                 )
 
                 nomor += 1
+
+
+# =========================
+# FOOTER PAGE
+# =========================
+
+st.markdown(
+    f"""
+    <div style="
+        text-align:center;
+        padding:12px;
+        color:#6b4226;
+        font-weight:bold;
+    ">
+        Halaman {page} dari {total_pages}
+    </div>
+    """,
+    unsafe_allow_html=True
+)

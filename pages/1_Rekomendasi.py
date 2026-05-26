@@ -10,30 +10,12 @@ load_css()
 
 st.title("Rekomendasi Resep Nusantara")
 
+
+# =========================
+# LOAD DATA
+# =========================
+
 df = load_data()
-
-recommender = RecipeRecommender(df)
-
-
-# =========================
-# SESSION
-# =========================
-
-if "favorites" not in st.session_state:
-    st.session_state["favorites"] = []
-
-if "recommendation_results" not in st.session_state:
-    st.session_state["recommendation_results"] = []
-
-
-# =========================
-# INPUT
-# =========================
-
-user_input = st.text_input(
-    "Masukkan bahan yang tersedia",
-    placeholder="contoh: ayam, bawang putih, telur"
-)
 
 
 # =========================
@@ -111,6 +93,106 @@ def clean_ingredient(item):
 
 
 # =========================
+# CLEANED INGREDIENTS
+# =========================
+
+df["cleaned_ingredients"] = df[
+    "Ingredients"
+].apply(clean_ingredient)
+
+
+# =========================
+# RECOMMENDER
+# =========================
+
+recommender = RecipeRecommender(df)
+
+
+# =========================
+# SESSION
+# =========================
+
+if "favorites" not in st.session_state:
+
+    st.session_state["favorites"] = []
+
+if "recommendation_results" not in st.session_state:
+
+    st.session_state[
+        "recommendation_results"
+    ] = []
+
+
+# =========================
+# STYLE
+# =========================
+
+st.markdown(
+    """
+    <style>
+
+    .stApp{
+        background-color:#f5efe6;
+    }
+
+    .recipe-card{
+        background-color:#fffaf3;
+        padding:22px;
+        border-radius:18px;
+        border:1px solid #dbc4aa;
+        margin-bottom:24px;
+    }
+
+    .recipe-title{
+        color:#6b4226;
+        font-size:28px;
+        font-weight:bold;
+        margin-bottom:12px;
+    }
+
+    .match-box{
+        background-color:#ede0d4;
+        padding:12px;
+        border-radius:12px;
+        margin-bottom:14px;
+        color:#4b3a2f;
+    }
+
+    .good-box{
+        background-color:#d8f3dc;
+        color:#1b4332;
+        padding:12px;
+        border-radius:12px;
+        margin-top:10px;
+        margin-bottom:10px;
+    }
+
+    .missing-box{
+        background-color:#ffe5d9;
+        color:#9c6644;
+        padding:12px;
+        border-radius:12px;
+        margin-top:10px;
+        margin-bottom:10px;
+    }
+
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
+# =========================
+# INPUT
+# =========================
+
+user_input = st.text_input(
+    "Masukkan bahan yang tersedia",
+    placeholder="contoh: ayam, bawang putih, telur"
+)
+
+
+# =========================
 # SEARCH
 # =========================
 
@@ -139,7 +221,6 @@ if st.button("Cari Rekomendasi"):
         )
 
 
-        # parsing berdasarkan --
         ingredient_list = [
 
             clean_ingredient(x)
@@ -177,7 +258,7 @@ if st.button("Cari Rekomendasi"):
 
 
         # =========================
-        # PERSENTASE BENAR
+        # PERSENTASE
         # =========================
 
         percentage = int(
@@ -230,7 +311,10 @@ if st.button("Cari Rekomendasi"):
         })
 
 
+    # =========================
     # SORT
+    # =========================
+
     final_results = sorted(
 
         final_results,
@@ -240,9 +324,14 @@ if st.button("Cari Rekomendasi"):
         reverse=True
     )
 
+
+    # =========================
+    # HANYA 5 RESEP
+    # =========================
+
     st.session_state[
         "recommendation_results"
-    ] = final_results[:20]
+    ] = final_results[:5]
 
 
 # =========================
@@ -258,25 +347,32 @@ if results:
 
     for item in results:
 
-        with st.container(border=True):
+        with st.container():
 
-            st.subheader(
-                item["title"]
+            st.markdown(
+                f"""
+                <div class="recipe-card">
+
+                <div class="recipe-title">
+                    {item["title"]}
+                </div>
+
+                <div class="match-box">
+
+                <b>Kategori:</b>
+                {item["category"]}
+
+                <br><br>
+
+                <b>Kecocokan:</b>
+                {item["percentage"]}%
+
+                </div>
+
+                </div>
+                """,
+                unsafe_allow_html=True
             )
-
-            col1, col2 = st.columns(2)
-
-            with col1:
-
-                st.write(
-                    f"Kategori: {item['category']}"
-                )
-
-            with col2:
-
-                st.write(
-                    f"Kecocokan: {item['percentage']}%"
-                )
 
 
             # =========================
@@ -285,14 +381,7 @@ if results:
 
             st.markdown(
                 """
-                <div style="
-                    background-color:#dbeafe;
-                    color:#1e3a5f;
-                    padding:12px;
-                    border-radius:10px;
-                    margin-top:10px;
-                    margin-bottom:10px;
-                ">
+                <div class="good-box">
                 <b>Bahan Yang Cocok</b>
                 </div>
                 """,
@@ -310,14 +399,7 @@ if results:
 
             st.markdown(
                 """
-                <div style="
-                    background-color:#fde7e7;
-                    color:#8b1e1e;
-                    padding:12px;
-                    border-radius:10px;
-                    margin-top:10px;
-                    margin-bottom:10px;
-                ">
+                <div class="missing-box">
                 <b>Bahan Yang Kurang</b>
                 </div>
                 """,
@@ -348,9 +430,32 @@ if results:
                 "Lihat Langkah Memasak"
             ):
 
-                st.write(
+                steps = str(
                     item["steps"]
                 )
+
+                if "--" in steps:
+
+                    step_list = steps.split("--")
+
+                else:
+
+                    step_list = steps.split("\n")
+
+
+                nomor = 1
+
+                for step in step_list:
+
+                    step = step.strip()
+
+                    if step:
+
+                        st.write(
+                            f"{nomor}. {step}"
+                        )
+
+                        nomor += 1
 
 
             # =========================

@@ -1,5 +1,10 @@
 import pandas as pd
+import re
 
+
+# =========================
+# LOAD DATA
+# =========================
 
 def load_data():
 
@@ -7,21 +12,80 @@ def load_data():
         "data/Indonesian_Food_Recipes.csv"
     )
 
-    df["Title"] = df["Title"].fillna("")
-    df["Ingredients"] = df["Ingredients"].fillna("")
-    df["Steps"] = df["Steps"].fillna("")
-    df["Category"] = df["Category"].fillna("Lainnya")
 
-    df["cleaned_title"] = (
-        df["Title"]
-        .astype(str)
-        .str.lower()
-    )
+    # CLEAN TITLE
+    df["cleaned_title"] = df[
+        "Title"
+    ].astype(str).str.lower()
 
-    df["cleaned_ingredients"] = (
-        df["Ingredients"]
-        .astype(str)
-        .str.lower()
-    )
 
     return df
+
+
+# =========================
+# CLEAN INGREDIENTS
+# =========================
+
+def clean_ingredients(text):
+
+    text = str(text).lower()
+
+
+    # GANTI PEMISAH
+    text = text.replace("--", ",")
+
+
+    # HAPUS ANGKA
+    text = re.sub(
+        r"\d+",
+        " ",
+        text
+    )
+
+
+    # HAPUS SATUAN
+    stopwords = [
+
+        "gr",
+        "gram",
+        "kg",
+        "ml",
+        "liter",
+        "sdm",
+        "sdt",
+        "butir",
+        "siung",
+        "buah",
+        "lembar",
+        "batang",
+        "ruas",
+        "cm"
+
+    ]
+
+
+    for word in stopwords:
+
+        text = text.replace(
+            word,
+            " "
+        )
+
+
+    # HAPUS KARAKTER ANEH
+    text = re.sub(
+        r"[^a-zA-Z,\s]",
+        " ",
+        text
+    )
+
+
+    # RAPIIKAN SPASI
+    text = re.sub(
+        r"\s+",
+        " ",
+        text
+    ).strip()
+
+
+    return text

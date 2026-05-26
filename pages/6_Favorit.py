@@ -39,23 +39,23 @@ if len(favorites) == 0:
     st.markdown(
         """
         <div style="
-            background-color:#e5e7eb;
+            background-color:#fffaf3;
             padding:30px;
             border-radius:18px;
             text-align:center;
             margin-top:30px;
-            border:1px solid #cbd5e1;
+            border:1px solid #dbc4aa;
         ">
 
         <h2 style="
-            color:#374151;
+            color:#6b4226;
             margin-bottom:10px;
         ">
             Belum Ada Resep Favorit
         </h2>
 
         <p style="
-            color:#6b7280;
+            color:#7c5a3c;
             font-size:15px;
         ">
             Tambahkan resep favorit dari halaman
@@ -72,23 +72,23 @@ else:
     st.markdown(
         f"""
         <div style="
-            background-color:#dbe4ea;
+            background-color:#ede0d4;
             padding:18px;
             border-radius:14px;
             margin-top:10px;
             margin-bottom:25px;
-            border:1px solid #c5d0d8;
+            border:1px solid #dbc4aa;
         ">
 
         <h3 style="
-            color:#1f2937;
+            color:#6b4226;
             margin-bottom:8px;
         ">
             Koleksi Resep Favorit
         </h3>
 
         <div style="
-            color:#4b5563;
+            color:#4b3a2f;
             font-size:15px;
         ">
             Total resep tersimpan:
@@ -153,17 +153,18 @@ else:
                         <div style="
                             background:linear-gradient(
                                 135deg,
-                                #dbeafe,
-                                #eef2ff
+                                #fffaf3,
+                                #f3e2cf
                             );
                             padding:20px;
                             border-radius:16px;
                             min-height:240px;
+                            border:1px solid #dbc4aa;
                         ">
 
                         <div style="
-                            background-color:#bfdbfe;
-                            color:#1e3a8a;
+                            background-color:#a47148;
+                            color:white;
                             display:inline-block;
                             padding:6px 14px;
                             border-radius:999px;
@@ -175,7 +176,7 @@ else:
                         </div>
 
                         <h3 style="
-                            color:#111827;
+                            color:#6b4226;
                             margin-bottom:15px;
                         ">
                             {title}
@@ -186,11 +187,11 @@ else:
                                 255,
                                 255,
                                 255,
-                                0.6
+                                0.65
                             );
                             padding:12px;
                             border-radius:12px;
-                            color:#334155;
+                            color:#4b3a2f;
                             line-height:1.7;
                             font-size:14px;
                         ">

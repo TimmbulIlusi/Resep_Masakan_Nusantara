@@ -20,74 +20,106 @@ df = load_data()
 # DETEKSI KATEGORI
 # =========================
 
-def detect_category(title, ingredients):
+def detect_categories(title, ingredients):
 
-    text = f"{title} {ingredients}".lower()
+    title = str(title).lower()
 
-
-    # SAYUR
-    if any(x in text for x in [
-
-        "sayur",
-        "bayam",
-        "kangkung",
-        "buncis",
-        "wortel",
-        "kol",
-        "sawi",
-        "terong",
-        "daun singkong",
-        "tumis"
-
-    ]):
-
-        return "Sayur"
+    categories = []
 
 
+    # =========================
     # DAGING SAPI
-    elif any(x in text for x in [
+    # =========================
 
-        "sapi",
+    sapi_keywords = [
+
         "daging sapi",
-        "rendang",
-        "bakso",
-        "iga"
+        "sapi",
+        "bakso sapi",
+        "rendang sapi",
+        "iga sapi",
+        "semur sapi"
 
-    ]):
+    ]
 
-        return "Daging Sapi"
+    if any(x in title for x in sapi_keywords):
+
+        categories.append(
+            "Daging Sapi"
+        )
 
 
-    # AYAM
-    elif any(x in text for x in [
+    # =========================
+    # DAGING KAMBING
+    # =========================
+
+    kambing_keywords = [
+
+        "daging kambing",
+        "kambing",
+        "sate kambing",
+        "gulai kambing",
+        "tongseng kambing"
+
+    ]
+
+    if any(x in title for x in kambing_keywords):
+
+        categories.append(
+            "Daging Kambing"
+        )
+
+
+    # =========================
+    # DAGING AYAM
+    # =========================
+
+    ayam_keywords = [
 
         "ayam",
-        "chicken"
+        "chicken",
+        "bakso ayam",
+        "rendang ayam"
 
-    ]):
+    ]
 
-        return "Daging Ayam"
+    if any(x in title for x in ayam_keywords):
+
+        categories.append(
+            "Daging Ayam"
+        )
 
 
+    # =========================
     # IKAN
-    elif any(x in text for x in [
+    # =========================
 
-        "ikan",
+    ikan_keywords = [
+
+        "ikan ",
+        "ikan-",
         "lele",
         "tongkol",
         "gurame",
         "bandeng",
-        "nila",
         "patin",
-        "tuna"
+        "tuna",
+        "salmon"
 
-    ]):
+    ]
 
-        return "Ikan"
+    if any(x in title for x in ikan_keywords):
+
+        categories.append(
+            "Ikan"
+        )
 
 
+    # =========================
     # SEAFOOD
-    elif any(x in text for x in [
+    # =========================
+
+    seafood_keywords = [
 
         "udang",
         "cumi",
@@ -95,63 +127,92 @@ def detect_category(title, ingredients):
         "kerang",
         "lobster"
 
-    ]):
+    ]
 
-        return "Seafood"
+    if any(x in title for x in seafood_keywords):
+
+        categories.append(
+            "Seafood"
+        )
 
 
+    # =========================
+    # SAYUR
+    # =========================
+
+    sayur_keywords = [
+
+        "sayur",
+        "capcay",
+        "bayam",
+        "kangkung",
+        "sop sayur"
+
+    ]
+
+    if any(x in title for x in sayur_keywords):
+
+        categories.append(
+            "Sayur"
+        )
+
+
+    # =========================
     # SAMBAL
-    elif any(x in text for x in [
+    # =========================
 
-        "sambal",
-        "balado"
+    if "sambal" in title:
 
-    ]):
+        categories.append(
+            "Sambal"
+        )
 
-        return "Sambal"
 
+    # =========================
+    # SUP & SOTO
+    # =========================
 
-    # SUP
-    elif any(x in text for x in [
+    sup_keywords = [
 
         "sup",
         "sop",
         "soto"
 
-    ]):
+    ]
 
-        return "Sup & Soto"
+    if any(x in title for x in sup_keywords):
 
-
-    # GORENGAN
-    elif any(x in text for x in [
-
-        "goreng",
-        "bakwan",
-        "mendoan",
-        "risol"
-
-    ]):
-
-        return "Gorengan"
+        categories.append(
+            "Sup & Soto"
+        )
 
 
+    # =========================
     # MIE & NASI
-    elif any(x in text for x in [
+    # =========================
+
+    mie_keywords = [
 
         "mie",
         "mi ",
-        "bihun",
         "kwetiau",
+        "bihun",
         "nasi"
 
-    ]):
+    ]
 
-        return "Mie & Nasi"
+    if any(x in title for x in mie_keywords):
+
+        categories.append(
+            "Mie & Nasi"
+        )
 
 
-    # KUE
-    elif any(x in text for x in [
+    # =========================
+    # KUE & DESSERT
+    # =========================
+
+    dessert_keywords = [
 
         "kue",
         "cake",
@@ -159,37 +220,72 @@ def detect_category(title, ingredients):
         "brownies",
         "puding"
 
-    ]):
+    ]
 
-        return "Kue & Dessert"
+    if any(x in title for x in dessert_keywords):
+
+        categories.append(
+            "Kue & Dessert"
+        )
 
 
+    # =========================
     # MINUMAN
-    elif any(x in text for x in [
+    # =========================
+
+    minuman_keywords = [
 
         "es ",
         "jus",
         "kopi",
-        "teh",
-        "susu"
+        "teh"
 
-    ]):
+    ]
 
-        return "Minuman"
+    if any(x in title for x in minuman_keywords):
+
+        categories.append(
+            "Minuman"
+        )
 
 
-    else:
+    # =========================
+    # DEFAULT
+    # =========================
 
-        return "Lauk"
+    if len(categories) == 0:
+
+        categories.append(
+            "Lauk"
+        )
+
+
+    # =========================
+    # HAPUS DUPLIKAT
+    # =========================
+
+    categories = list(
+        dict.fromkeys(categories)
+    )
+
+
+    # =========================
+    # BATASI 3 KATEGORI
+    # =========================
+
+    categories = categories[:3]
+
+
+    return categories
 
 
 # =========================
-# TAMBAH KATEGORI
+# TAMBAH KOLOM
 # =========================
 
 df["KategoriBaru"] = df.apply(
 
-    lambda row: detect_category(
+    lambda row: detect_categories(
         row["Title"],
         row["Ingredients"]
     ),
@@ -208,11 +304,11 @@ categories = [
     "Lauk",
     "Daging Ayam",
     "Daging Sapi",
+    "Daging Kambing",
     "Ikan",
     "Seafood",
     "Sambal",
     "Sup & Soto",
-    "Gorengan",
     "Mie & Nasi",
     "Kue & Dessert",
     "Minuman"
@@ -221,7 +317,7 @@ categories = [
 
 
 # =========================
-# PILIH KATEGORI
+# SELECTBOX
 # =========================
 
 selected_category = st.selectbox(
@@ -231,57 +327,131 @@ selected_category = st.selectbox(
 
 
 # =========================
-# FILTER DATA
+# FILTER
 # =========================
 
 filtered_df = df[
-    df["KategoriBaru"] == selected_category
+    df["KategoriBaru"].apply(
+        lambda x: selected_category in x
+    )
 ]
 
 
 # =========================
-# HEADER INFO
+# STYLE
 # =========================
 
 st.markdown(
-    f"""
-    <div style="
-        background-color:#dbe4ea;
-        padding:20px;
-        border-radius:16px;
+    """
+    <style>
+
+    .stApp{
+        background-color:#f5efe6;
+    }
+
+    .category-card{
+        background-color:#fffaf3;
+        padding:22px;
+        border-radius:18px;
+        border:1px solid #dbc4aa;
+        margin-bottom:20px;
+    }
+
+    .recipe-title{
+        color:#6b4226;
+        font-size:24px;
+        font-weight:bold;
+        margin-bottom:14px;
+    }
+
+    .preview-box{
+        background-color:#ede0d4;
+        padding:12px;
+        border-radius:12px;
+        color:#4b3a2f;
+        line-height:1.8;
         margin-top:10px;
-        margin-bottom:25px;
-        border:1px solid #c5d0d8;
-    ">
+    }
 
-    <h3 style="
-        color:#1f2937;
-        margin-bottom:8px;
-    ">
-        {selected_category}
-    </h3>
+    .badge{
+        background-color:#a47148;
+        color:white;
+        padding:6px 14px;
+        border-radius:999px;
+        font-size:13px;
+        display:inline-block;
+        margin-bottom:12px;
+        margin-right:8px;
+    }
 
-    <div style="
-        color:#4b5563;
-        font-size:15px;
-    ">
-        Total resep ditemukan:
-        <b>{len(filtered_df)}</b>
-    </div>
-
-    </div>
+    </style>
     """,
     unsafe_allow_html=True
 )
 
 
 # =========================
-# CARD RESEP
+# INFO
 # =========================
 
-for index, row in filtered_df.head(30).iterrows():
+st.info(
+    f"Menampilkan {len(filtered_df)} resep kategori {selected_category}"
+)
 
-    recipe_title = str(
+
+# =========================
+# PAGINATION
+# =========================
+
+items_per_page = 20
+
+total_data = len(filtered_df)
+
+total_pages = total_data // items_per_page
+
+if total_data % items_per_page != 0:
+
+    total_pages += 1
+
+
+page = st.number_input(
+
+    "Halaman",
+
+    min_value=1,
+
+    max_value=max(total_pages, 1),
+
+    value=1,
+
+    step=1
+
+)
+
+
+start_idx = (
+    (page - 1)
+    * items_per_page
+)
+
+end_idx = (
+    start_idx
+    + items_per_page
+)
+
+
+page_data = filtered_df.iloc[
+    start_idx:end_idx
+]
+
+
+# =========================
+# TAMPILKAN DATA
+# =========================
+
+for index, row in page_data.iterrows():
+
+    title = str(
         row["Title"]
     )
 
@@ -290,7 +460,6 @@ for index, row in filtered_df.head(30).iterrows():
     ).split("--")
 
 
-    # preview bahan
     preview = []
 
     for item in ingredients[:5]:
@@ -305,108 +474,117 @@ for index, row in filtered_df.head(30).iterrows():
     preview_text = " • ".join(preview)
 
 
-    with st.container(border=True):
+    badges = ""
 
-        col1, col2 = st.columns([4, 1])
+    for cat in row["KategoriBaru"]:
+
+        badges += f"""
+        <span class="badge">
+            {cat}
+        </span>
+        """
 
 
-        with col1:
+    st.markdown(
+        f"""
+        <div class="category-card">
 
-            st.markdown(
-                f"""
-                <div style="
-                    padding:5px 5px 5px 0px;
-                ">
+        {badges}
 
-                <h3 style="
-                    color:#111827;
-                    margin-bottom:12px;
-                ">
-                    {recipe_title}
-                </h3>
+        <div class="recipe-title">
+            {title}
+        </div>
 
-                <div style="
-                    background-color:#eef2f7;
-                    color:#334155;
-                    padding:12px;
-                    border-radius:10px;
-                    line-height:1.7;
-                    font-size:14px;
-                ">
+        <div class="preview-box">
 
-                <b>Bahan Utama:</b>
+        <b>Preview Bahan:</b>
 
-                <br><br>
+        <br><br>
 
-                {preview_text}
+        {preview_text}
 
-                </div>
+        </div>
 
-                </div>
-                """,
-                unsafe_allow_html=True
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+    with st.expander(
+        "Lihat Detail Masakan"
+    ):
+
+        st.subheader("Kategori")
+
+        st.write(
+            ", ".join(
+                row["KategoriBaru"]
             )
+        )
 
 
-        with col2:
+        st.subheader(
+            "Bahan Lengkap"
+        )
 
-            st.markdown(
-                f"""
-                <div style="
-                    background-color:#cbd5e1;
-                    color:#1e293b;
-                    text-align:center;
-                    padding:10px;
-                    border-radius:12px;
-                    margin-top:10px;
-                    font-size:13px;
-                    font-weight:bold;
-                ">
-                    {selected_category}
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+        for ing in ingredients:
+
+            ing = ing.strip()
+
+            if ing:
+
+                st.write(
+                    f"• {ing}"
+                )
 
 
-        with st.expander("Lihat Detail Masakan"):
+        st.subheader(
+            "Langkah Memasak"
+        )
 
-            st.markdown("### Bahan Lengkap")
+        steps = str(
+            row["Steps"]
+        )
 
-            for ing in ingredients:
+        if "--" in steps:
 
-                ing = ing.strip()
+            step_list = steps.split("--")
 
-                if ing:
+        else:
 
-                    st.write(f"• {ing}")
-
-
-            st.markdown("### Langkah Memasak")
-
-            steps = str(
-                row["Steps"]
-            )
-
-            if "--" in steps:
-
-                step_list = steps.split("--")
-
-            else:
-
-                step_list = steps.split("\n")
+            step_list = steps.split("\n")
 
 
-            nomor = 1
+        nomor = 1
 
-            for step in step_list:
+        for step in step_list:
 
-                step = step.strip()
+            step = step.strip()
 
-                if step:
+            if step:
 
-                    st.write(
-                        f"{nomor}. {step}"
-                    )
+                st.write(
+                    f"{nomor}. {step}"
+                )
 
-                    nomor += 1
+                nomor += 1
+
+
+# =========================
+# FOOTER PAGE
+# =========================
+
+st.markdown(
+    f"""
+    <div style="
+        text-align:center;
+        padding:12px;
+        color:#6b4226;
+        font-weight:bold;
+    ">
+        Halaman {page} dari {total_pages}
+    </div>
+    """,
+    unsafe_allow_html=True
+)

@@ -30,6 +30,15 @@ search = st.text_input(
 # FILTER DATA
 # =========================
 
+if "cleaned_title" not in df.columns:
+
+    df["cleaned_title"] = (
+        df["Title"]
+        .astype(str)
+        .str.lower()
+    )
+
+
 if search:
 
     filtered_df = df[
@@ -78,32 +87,131 @@ recipe_category = str(
 
 
 # =========================
+# STYLE
+# =========================
+
+st.markdown(
+    """
+    <style>
+
+    .stApp{
+        background-color:#f5efe6;
+    }
+
+    .header-card{
+        background:linear-gradient(
+            135deg,
+            #8b5e34,
+            #a47148
+        );
+        padding:28px;
+        border-radius:20px;
+        margin-bottom:25px;
+        box-shadow:0 4px 12px rgba(
+            0,
+            0,
+            0,
+            0.08
+        );
+    }
+
+    .recipe-title{
+        color:white;
+        font-size:34px;
+        font-weight:bold;
+        margin-bottom:12px;
+    }
+
+    .recipe-category{
+        background-color:rgba(
+            255,
+            255,
+            255,
+            0.18
+        );
+        color:#fff7ed;
+        padding:8px 16px;
+        border-radius:999px;
+        display:inline-block;
+        font-size:14px;
+        font-weight:bold;
+    }
+
+    .section-title{
+        background-color:#ede0d4;
+        padding:16px;
+        border-radius:14px;
+        margin-top:20px;
+        margin-bottom:15px;
+        border:1px solid #dbc4aa;
+    }
+
+    .section-title h3{
+        color:#6b4226;
+        margin:0;
+    }
+
+    .ingredient-card{
+        background-color:#fffaf3;
+        padding:14px;
+        border-radius:12px;
+        margin-bottom:12px;
+        border-left:6px solid #a47148;
+        color:#4b3a2f;
+        box-shadow:0 2px 6px rgba(
+            0,
+            0,
+            0,
+            0.04
+        );
+    }
+
+    .step-card{
+        background-color:#fffaf3;
+        padding:18px;
+        border-radius:14px;
+        margin-bottom:16px;
+        border:1px solid #dbc4aa;
+        color:#4b3a2f;
+        box-shadow:0 2px 8px rgba(
+            0,
+            0,
+            0,
+            0.05
+        );
+    }
+
+    .step-number{
+        background-color:#a47148;
+        color:white;
+        display:inline-block;
+        padding:6px 14px;
+        border-radius:999px;
+        font-size:13px;
+        font-weight:bold;
+        margin-bottom:14px;
+    }
+
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
+# =========================
 # HEADER
 # =========================
 
 st.markdown(
     f"""
-    <div style="
-        background-color:#dfe3e8;
-        padding:20px;
-        border-radius:12px;
-        margin-bottom:20px;
-        border:1px solid #cbd5e1;
-    ">
+    <div class="header-card">
 
-    <h2 style="
-        color:#1f2937;
-        margin-bottom:10px;
-    ">
+    <div class="recipe-title">
         {recipe_title}
-    </h2>
+    </div>
 
-    <div style="
-        color:#4b5563;
-        font-size:15px;
-    ">
-        <b>Kategori:</b>
-        {recipe_category}
+    <div class="recipe-category">
+        Kategori: {recipe_category}
     </div>
 
     </div>
@@ -118,21 +226,8 @@ st.markdown(
 
 st.markdown(
     """
-    <div style="
-        background-color:#dfe3e8;
-        padding:15px;
-        border-radius:12px;
-        margin-bottom:15px;
-        border:1px solid #cbd5e1;
-    ">
-
-    <h3 style="
-        color:#1e40af;
-        margin:0;
-    ">
-        Bahan-Bahan
-    </h3>
-
+    <div class="section-title">
+        <h3>Bahan-Bahan</h3>
     </div>
     """,
     unsafe_allow_html=True
@@ -152,14 +247,7 @@ for item in ingredients:
 
         st.markdown(
             f"""
-            <div style="
-                background-color:#f3f4f6;
-                padding:12px;
-                border-radius:10px;
-                margin-bottom:10px;
-                border-left:4px solid #94a3b8;
-                color:#111827;
-            ">
+            <div class="ingredient-card">
                 • {item}
             </div>
             """,
@@ -173,22 +261,8 @@ for item in ingredients:
 
 st.markdown(
     """
-    <div style="
-        background-color:#dfe3e8;
-        padding:15px;
-        border-radius:12px;
-        margin-top:25px;
-        margin-bottom:15px;
-        border:1px solid #cbd5e1;
-    ">
-
-    <h3 style="
-        color:#1e40af;
-        margin:0;
-    ">
-        Langkah Memasak
-    </h3>
-
+    <div class="section-title">
+        <h3>Langkah Memasak</h3>
     </div>
     """,
     unsafe_allow_html=True
@@ -225,26 +299,21 @@ for step in steps:
 
     if step:
 
-        with st.container(border=True):
+        st.markdown(
+            f"""
+            <div class="step-card">
 
-            st.markdown(
-                f"""
-                <div style="
-                    background-color:#f8fafc;
-                    padding:15px;
-                    border-radius:10px;
-                    color:#111827;
-                ">
+            <div class="step-number">
+                Langkah {step_number}
+            </div>
 
-                <b>Langkah {step_number}</b>
-
-                <br><br>
-
+            <div>
                 {step}
+            </div>
 
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
         step_number += 1
