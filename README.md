@@ -11,9 +11,9 @@ menggunakan dataset Kaggle.
 ## Fitur
 - Recommendation system
 - Certainty Factor (CF)
-- Hybrid System / Heuristic Adjustment (100% Match)
+- Hybrid System / Heuristic Adjustment
+- Rating
 - Favorite recipe
-- Dark mode
 - Detail resep
 - Kategori resep
 
